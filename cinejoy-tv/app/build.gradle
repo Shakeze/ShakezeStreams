@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'pk.cinejoy.tv'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'pk.cinejoy.tv'
+        minSdk 21
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    // A fixed key committed with the project, so every build (Android Studio or
+    // GitHub Actions) has the same signature and can be installed over the last one.
+    signingConfigs {
+        tv {
+            storeFile file('cinejoy-tv.keystore')
+            storePassword 'cinejoytv'
+            keyAlias 'cinejoytv'
+            keyPassword 'cinejoytv'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.tv
+        }
+        debug {
+            signingConfig signingConfigs.tv
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+// Name the output CinejoyTV-<version>.apk
+android.applicationVariants.configureEach { variant ->
+    variant.outputs.configureEach {
+        outputFileName = "CinejoyTV-${variant.versionName}-${variant.buildType.name}.apk"
+    }
+}
